@@ -16,12 +16,4 @@ public abstract class ListState<T> {
      */
     @Setup(Level.Invocation)
     public abstract void setUp();
-
-    public abstract static class A<T> extends ListState<T> {
-
-    }
-
-    public abstract static class B<T> extends ListState<T> {
-
-    }
 }
