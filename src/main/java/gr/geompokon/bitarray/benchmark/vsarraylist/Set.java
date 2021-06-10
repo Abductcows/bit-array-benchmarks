@@ -36,7 +36,6 @@ import gr.geompokon.bitarray.benchmark.TestMethods;
 import gr.geompokon.bitarray.benchmark.state.ListState;
 import gr.geompokon.bitarray.benchmark.state.TestStates;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
@@ -57,9 +56,15 @@ public class Set {
     public static void main(String[] args) throws RunnerException {
         new Runner(
                 new OptionsBuilder()
-                        .include(".*Get*")
+                        .include(".*Set*")
                         .build()
         ).run();
+    }
+
+    @State(Scope.Benchmark)
+    public static class SetState {
+        public static final UnaryOperator<Boolean> NEGATER =
+                bool -> bool == Boolean.TRUE ? Boolean.FALSE : Boolean.TRUE;
     }
 
     public static class BitArrayState extends ListState<Boolean> {
@@ -68,7 +73,7 @@ public class Set {
             obj = new BitArray(10);
             // add the elements to get in the benchmark
             TestMethods.populateList(obj,
-                    TestStates.GetTestSizeState.GET_TEST_SIZE,
+                    TestStates.SetTestSizeState.SET_TEST_SIZE,
                     ThreadLocalRandom.current()::nextBoolean);
         }
     }
@@ -76,10 +81,10 @@ public class Set {
     public static class ArrayListState extends ListState<Boolean> {
         @Override
         public void setUp() {
-            obj = new ArrayList<>(10);
-            // add the elements to get in the benchmark
+            obj = new ArrayList<>(TestStates.SetTestSizeState.SET_TEST_SIZE);
+            // add the elements to set in the benchmark
             TestMethods.populateList(obj,
-                    TestStates.GetTestSizeState.GET_TEST_SIZE,
+                    TestStates.SetTestSizeState.SET_TEST_SIZE,
                     ThreadLocalRandom.current()::nextBoolean);
         }
     }
@@ -87,17 +92,16 @@ public class Set {
     // BENCHMARKS
 
     @Benchmark
-    public BitArrayState BitArraySet(BitArrayState bitArrayState, TestStates.GetTestSizeState testSizeState,
-                                     Blackhole blackhole) {
+    public BitArrayState BitArraySet(BitArrayState bitArrayState, TestStates.SetTestSizeState testSizeState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.getRandomIndex(bitArrayState.obj, rand, testSizeState, blackhole);
+        TestMethods.setRandomIndex(bitArrayState.obj, rand, testSizeState, SetState.NEGATER);
         return bitArrayState;
     }
 
     @Benchmark
     public ArrayListState ArrayListSet(ArrayListState arrayListState, TestStates.SetTestSizeState testSizeState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.setRandomIndex(arrayListState.obj, rand, testSizeState, aBoolean -> Boolean.);
+        TestMethods.setRandomIndex(arrayListState.obj, rand, testSizeState, SetState.NEGATER);
         return arrayListState;
     }
 
