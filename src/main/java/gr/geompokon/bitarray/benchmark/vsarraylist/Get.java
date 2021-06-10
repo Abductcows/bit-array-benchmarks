@@ -86,18 +86,18 @@ public class Get {
     // BENCHMARKS
 
     @Benchmark
-    public BitArrayState BitArrayGet(BitArrayState bitArrayState, TestStates.GetTestSizeState testSizeState,
+    public BitArrayState BitArrayGet(BitArrayState bitArrayState,
                                      Blackhole blackhole) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.getRandomIndex(bitArrayState.obj, rand, testSizeState, blackhole);
+        TestMethods.getRandomIndex(bitArrayState.obj, rand, blackhole);
         return bitArrayState;
     }
 
     @Benchmark
-    public ArrayListState ArrayListGet(ArrayListState arrayListState, TestStates.GetTestSizeState testSizeState,
+    public ArrayListState ArrayListGet(ArrayListState arrayListState,
                                        Blackhole blackhole) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.getRandomIndex(arrayListState.obj, rand, testSizeState, blackhole);
+        TestMethods.getRandomIndex(arrayListState.obj, rand, blackhole);
         return arrayListState;
     }
 

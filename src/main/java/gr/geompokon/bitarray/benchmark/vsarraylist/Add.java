@@ -44,8 +44,6 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-import static gr.geompokon.bitarray.benchmark.state.TestStates.AddTestSizeState;
-
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Fork(5)
@@ -78,16 +76,16 @@ public class Add {
     // BENCHMARKS
 
     @Benchmark
-    public BitArrayState BitArrayAdd(BitArrayState bitArrayState, AddTestSizeState testSizeState) {
+    public BitArrayState BitArrayAdd(BitArrayState bitArrayState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.addRandomIndex(bitArrayState.obj, rand, testSizeState, rand::nextBoolean);
+        TestMethods.addRandomIndex(bitArrayState.obj, rand, rand::nextBoolean);
         return bitArrayState;
     }
 
     @Benchmark
-    public ArrayListState ArrayListAdd(ArrayListState arrayListState, AddTestSizeState testSizeState) {
+    public ArrayListState ArrayListAdd(ArrayListState arrayListState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.addRandomIndex(arrayListState.obj, rand, testSizeState, rand::nextBoolean);
+        TestMethods.addRandomIndex(arrayListState.obj, rand, rand::nextBoolean);
         return arrayListState;
     }
 

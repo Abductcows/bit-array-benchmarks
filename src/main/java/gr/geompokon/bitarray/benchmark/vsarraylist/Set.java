@@ -92,16 +92,16 @@ public class Set {
     // BENCHMARKS
 
     @Benchmark
-    public BitArrayState BitArraySet(BitArrayState bitArrayState, TestStates.SetTestSizeState testSizeState) {
+    public BitArrayState BitArraySet(BitArrayState bitArrayState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.setRandomIndex(bitArrayState.obj, rand, testSizeState, SetState.NEGATER);
+        TestMethods.setRandomIndex(bitArrayState.obj, rand, SetState.NEGATER);
         return bitArrayState;
     }
 
     @Benchmark
-    public ArrayListState ArrayListSet(ArrayListState arrayListState, TestStates.SetTestSizeState testSizeState) {
+    public ArrayListState ArrayListSet(ArrayListState arrayListState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.setRandomIndex(arrayListState.obj, rand, testSizeState, SetState.NEGATER);
+        TestMethods.setRandomIndex(arrayListState.obj, rand, SetState.NEGATER);
         return arrayListState;
     }
 

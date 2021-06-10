@@ -13,7 +13,7 @@ public class TestMethods {
 
     public static <T> void addRandomIndex(List<T> list,
                                           Random indexGenerator,
-                                          TestStates.AddTestSizeState testSizeState, Supplier<? extends T> insertions) {
+                                          Supplier<? extends T> insertions) {
         list.add(insertions.get());
         for (int i = 1; i < TestStates.AddTestSizeState.ADD_TEST_SIZE; i++) {
             list.add(
@@ -24,7 +24,6 @@ public class TestMethods {
 
     public static <T> void getRandomIndex(List<T> list,
                                           Random indexGenerator,
-                                          TestStates.GetTestSizeState testSizeState,
                                           Blackhole blackhole) {
         int size = list.size();
         for (int i = 0; i < TestStates.GetTestSizeState.GET_TEST_SIZE; i++) {
@@ -36,7 +35,6 @@ public class TestMethods {
 
     public static <T> void setRandomIndex(List<T> list,
                                           Random indexGenerator,
-                                          TestStates.SetTestSizeState testSizeState,
                                           UnaryOperator<T> mutator) {
         int size = list.size();
         for (int i = 0; i < TestStates.SetTestSizeState.SET_TEST_SIZE; i++) {
@@ -48,8 +46,7 @@ public class TestMethods {
     }
 
     public static <T> void removeRandomIndex(List<T> list,
-                                             Random indexGenerator,
-                                             TestStates.RemoveTestSizeState testSizeState) {
+                                             Random indexGenerator) {
         int limit = Math.min(TestStates.RemoveTestSizeState.REMOVE_TEST_SIZE, list.size());
         for (int i = 0; i < limit; i++) {
             int nextIndex = indexGenerator.nextInt(list.size());
