@@ -29,78 +29,76 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package gr.geompokon.bitarray.benchmark;
+package gr.geompokon.bitarray.benchmark.vsarraylist;
 
-import gr.geompokon.bitarray.benchmark.ListState;
+import gr.geompokon.bitarray.BitArray;
+import gr.geompokon.bitarray.benchmark.TestMethods;
+import gr.geompokon.bitarray.benchmark.state.ListState;
+import gr.geompokon.bitarray.benchmark.state.TestStates;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Fork(6)
-@Warmup(iterations = 0)
-@Measurement(iterations = 1, time = 5, timeUnit = TimeUnit.MINUTES)
-public class VsArrayList {
+@Fork(15)
+@Warmup(iterations = 0, time = 1, timeUnit = TimeUnit.NANOSECONDS)
+@Measurement(iterations = 1, time = 1, timeUnit = TimeUnit.NANOSECONDS)
+public class Get {
 
     public static void main(String[] args) throws RunnerException {
         new Runner(
                 new OptionsBuilder()
-                        .include(".VsArrayList*")
+                        .include(".*Get*")
                         .build()
         ).run();
     }
 
-    public static class BitArray extends ListState<Boolean> {
+    public static class BitArrayState extends ListState<Boolean> {
+        @Override
         public void setUp() {
-            obj = new gr.geompokon.bitarray.BitArray(10);
-            obj.add(Boolean.FALSE);
+            obj = new BitArray(10);
+            // add the elements to get in the benchmark
+            TestMethods.populateList(obj,
+                    TestStates.GetTestSizeState.GET_TEST_SIZE,
+                    ThreadLocalRandom.current()::nextBoolean);
         }
     }
 
-    public static class ArrayList extends ListState<Boolean> {
+    public static class ArrayListState extends ListState<Boolean> {
+        @Override
         public void setUp() {
-            obj = new java.util.ArrayList<>(10);
-            obj.add(Boolean.FALSE);
+            obj = new ArrayList<>(10);
+            // add the elements to get in the benchmark
+            TestMethods.populateList(obj,
+                    TestStates.GetTestSizeState.GET_TEST_SIZE,
+                    ThreadLocalRandom.current()::nextBoolean);
         }
     }
 
-    @State(Scope.Thread)
-    public static class vars {
-        public Random rand;
+    // BENCHMARKS
 
-        @Param({"1000", "100000", "1500000"})
-        int TEST_SIZE;
-
-        @Setup(Level.Invocation)
-        public void init() {
-            rand = new Random();
-        }
+    @Benchmark
+    public BitArrayState BitArrayGet(BitArrayState bitArrayState, TestStates.GetTestSizeState testSizeState,
+                                     Blackhole blackhole) {
+        Random rand = ThreadLocalRandom.current();
+        TestMethods.getRandomIndex(bitArrayState.obj, rand, testSizeState, blackhole);
+        return bitArrayState;
     }
 
     @Benchmark
-    public void bitArrayRandomAdd(BitArray bitArray, vars vars, Blackhole blackhole) {
-        for (int i = 0; i < vars.TEST_SIZE; i++) {
-            bitArray.obj.add(
-                    vars.rand.nextInt(bitArray.obj.size()),
-                    vars.rand.nextBoolean());
-        }
-        blackhole.consume(bitArray.obj);
-    }
-
-    @Benchmark
-    public void boolArrayRandomAdd(ArrayList ArrayList, vars vars, Blackhole blackhole) {
-        for (int i = 0; i < vars.TEST_SIZE; i++) {
-            ArrayList.obj.add(
-                    vars.rand.nextInt(ArrayList.obj.size()),
-                    vars.rand.nextBoolean());
-        }
-        blackhole.consume(ArrayList.obj);
+    public ArrayListState ArrayListGet(ArrayListState arrayListState, TestStates.GetTestSizeState testSizeState,
+                                       Blackhole blackhole) {
+        Random rand = ThreadLocalRandom.current();
+        TestMethods.getRandomIndex(arrayListState.obj, rand, testSizeState, blackhole);
+        return arrayListState;
     }
 
 }

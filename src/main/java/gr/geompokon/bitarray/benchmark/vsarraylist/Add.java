@@ -29,64 +29,66 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package gr.geompokon.bitarray.benchmark;
+package gr.geompokon.bitarray.benchmark.vsarraylist;
 
+import gr.geompokon.bitarray.BitArray;
+import gr.geompokon.bitarray.benchmark.TestMethods;
+import gr.geompokon.bitarray.benchmark.state.ListState;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
+
+import static gr.geompokon.bitarray.benchmark.state.TestStates.AddTestSizeState;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Fork(5)
-@Warmup(iterations = 0)
-@Measurement(iterations = 1, time = 5, timeUnit = TimeUnit.MINUTES)
-public abstract class ListBenchmark<E> {
+@Warmup(iterations = 0, time = 1, timeUnit = TimeUnit.NANOSECONDS)
+@Measurement(iterations = 1, time = 1, timeUnit = TimeUnit.NANOSECONDS)
+public class Add {
 
     public static void main(String[] args) throws RunnerException {
         new Runner(
                 new OptionsBuilder()
-                        .include(".*VS*")
+                        .include(".*Add*")
                         .build()
         ).run();
     }
 
-    public abstract static class A<E> extends ListState<E> {
-    }
-
-    public abstract static class B<E> extends ListState<E> {
-    }
-
-
-    @Benchmark
-    public <T> void aAdd(A<T> listA,
-                         Supplier<? extends T> insertions,
-                         TestState testState,
-                         Blackhole blackhole) {
-        listA.obj.add(insertions.get());
-        add(listA.obj, insertions, testState, blackhole);
-    }
-
-    @Benchmark
-    public <T> void aAdd(B<T> listB, Supplier<? extends T> insertions,
-                         TestState testState, Blackhole blackhole) {
-        listB.obj.add(insertions.get());
-        add(listB.obj, insertions, testState, blackhole);
-    }
-
-    public <T> void add(List<T> list, Supplier<? extends T> insertions,
-                        TestState testState, Blackhole blackhole) {
-        for (int i = 1; i < testState.ADD_TEST_SIZE; i++) {
-            list.add(
-                    testState.rand.nextInt(i),
-                    insertions.get());
+    public static class BitArrayState extends ListState<Boolean> {
+        @Override
+        public void setUp() {
+            obj = new BitArray(10);
         }
-        blackhole.consume(list);
+    }
+
+    public static class ArrayListState extends ListState<Boolean> {
+        @Override
+        public void setUp() {
+            obj = new ArrayList<>(10);
+        }
+    }
+
+    // BENCHMARKS
+
+    @Benchmark
+    public BitArrayState BitArrayAdd(BitArrayState bitArrayState, AddTestSizeState testSizeState) {
+        Random rand = ThreadLocalRandom.current();
+        TestMethods.addRandomIndex(bitArrayState.obj, rand, testSizeState, rand::nextBoolean);
+        return bitArrayState;
+    }
+
+    @Benchmark
+    public ArrayListState ArrayListAdd(ArrayListState arrayListState, AddTestSizeState testSizeState) {
+        Random rand = ThreadLocalRandom.current();
+        TestMethods.addRandomIndex(arrayListState.obj, rand, testSizeState, rand::nextBoolean);
+        return arrayListState;
     }
 
 }
