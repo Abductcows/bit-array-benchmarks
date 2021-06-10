@@ -70,8 +70,8 @@ public class Set {
     public static class BitArrayState extends ListState<Boolean> {
         @Override
         public void setUp() {
-            obj = new BitArray(10);
-            // add the elements to get in the benchmark
+            obj = new BitArray(TestStates.SetTestSizeState.SET_TEST_SIZE);
+            // add the elements to set in the benchmark
             TestMethods.populateList(obj,
                     TestStates.SetTestSizeState.SET_TEST_SIZE,
                     ThreadLocalRandom.current()::nextBoolean);

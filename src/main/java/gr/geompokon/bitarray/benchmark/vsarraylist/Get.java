@@ -64,7 +64,7 @@ public class Get {
     public static class BitArrayState extends ListState<Boolean> {
         @Override
         public void setUp() {
-            obj = new BitArray(10);
+            obj = new BitArray(TestStates.GetTestSizeState.GET_TEST_SIZE);
             // add the elements to get in the benchmark
             TestMethods.populateList(obj,
                     TestStates.GetTestSizeState.GET_TEST_SIZE,
@@ -75,7 +75,7 @@ public class Get {
     public static class ArrayListState extends ListState<Boolean> {
         @Override
         public void setUp() {
-            obj = new ArrayList<>(10);
+            obj = new ArrayList<>(TestStates.GetTestSizeState.GET_TEST_SIZE);
             // add the elements to get in the benchmark
             TestMethods.populateList(obj,
                     TestStates.GetTestSizeState.GET_TEST_SIZE,
