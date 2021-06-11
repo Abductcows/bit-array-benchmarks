@@ -34,7 +34,7 @@ package gr.geompokon.bitarray.benchmark.vsarraylist;
 import gr.geompokon.bitarray.BitArray;
 import gr.geompokon.bitarray.benchmark.TestMethods;
 import gr.geompokon.bitarray.benchmark.state.ListState;
-import gr.geompokon.bitarray.benchmark.state.TestStates;
+import gr.geompokon.bitarray.benchmark.state.TestStates.SetTestSizeState;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -70,10 +70,10 @@ public class Set {
     public static class BitArrayState extends ListState<Boolean> {
         @Override
         public void setUp() {
-            obj = new BitArray(TestStates.SetTestSizeState.SET_TEST_SIZE);
+            int elementsToAdd = SetTestSizeState.SET_TEST_SIZE;
+            obj = new BitArray(elementsToAdd);
             // add the elements to set in the benchmark
-            TestMethods.populateList(obj,
-                    TestStates.SetTestSizeState.SET_TEST_SIZE,
+            TestMethods.populateList(obj, elementsToAdd,
                     ThreadLocalRandom.current()::nextBoolean);
         }
     }
@@ -81,10 +81,10 @@ public class Set {
     public static class ArrayListState extends ListState<Boolean> {
         @Override
         public void setUp() {
-            obj = new ArrayList<>(TestStates.SetTestSizeState.SET_TEST_SIZE);
+            int elementsToAdd = SetTestSizeState.SET_TEST_SIZE;
+            obj = new ArrayList<>(elementsToAdd);
             // add the elements to set in the benchmark
-            TestMethods.populateList(obj,
-                    TestStates.SetTestSizeState.SET_TEST_SIZE,
+            TestMethods.populateList(obj, elementsToAdd,
                     ThreadLocalRandom.current()::nextBoolean);
         }
     }
@@ -92,16 +92,16 @@ public class Set {
     // BENCHMARKS
 
     @Benchmark
-    public BitArrayState BitArraySet(BitArrayState bitArrayState) {
+    public BitArrayState BitArraySet(BitArrayState bitArrayState, SetTestSizeState testSizeState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.setRandomIndex(bitArrayState.obj, rand, SetState.NEGATER);
+        TestMethods.setRandomIndex(bitArrayState.obj, rand, SetTestSizeState.SET_TEST_SIZE, SetState.NEGATER);
         return bitArrayState;
     }
 
     @Benchmark
-    public ArrayListState ArrayListSet(ArrayListState arrayListState) {
+    public ArrayListState ArrayListSet(ArrayListState arrayListState, SetTestSizeState testSizeState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.setRandomIndex(arrayListState.obj, rand, SetState.NEGATER);
+        TestMethods.setRandomIndex(arrayListState.obj, rand, SetTestSizeState.SET_TEST_SIZE, SetState.NEGATER);
         return arrayListState;
     }
 
