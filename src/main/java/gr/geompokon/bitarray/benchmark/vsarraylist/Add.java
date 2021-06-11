@@ -34,6 +34,7 @@ package gr.geompokon.bitarray.benchmark.vsarraylist;
 import gr.geompokon.bitarray.BitArray;
 import gr.geompokon.bitarray.benchmark.TestMethods;
 import gr.geompokon.bitarray.benchmark.state.ListState;
+import gr.geompokon.bitarray.benchmark.state.TestStates.AddTestSizeState;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -76,16 +77,16 @@ public class Add {
     // BENCHMARKS
 
     @Benchmark
-    public BitArrayState BitArrayAdd(BitArrayState bitArrayState) {
+    public BitArrayState BitArrayAdd(BitArrayState bitArrayState, AddTestSizeState testSizeState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.addRandomIndex(bitArrayState.obj, rand, rand::nextBoolean);
+        TestMethods.addRandomIndex(bitArrayState.obj, rand, AddTestSizeState.ADD_TEST_SIZE, rand::nextBoolean);
         return bitArrayState;
     }
 
     @Benchmark
-    public ArrayListState ArrayListAdd(ArrayListState arrayListState) {
+    public ArrayListState ArrayListAdd(ArrayListState arrayListState, AddTestSizeState testSizeState) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.addRandomIndex(arrayListState.obj, rand, rand::nextBoolean);
+        TestMethods.addRandomIndex(arrayListState.obj, rand, AddTestSizeState.ADD_TEST_SIZE, rand::nextBoolean);
         return arrayListState;
     }
 
