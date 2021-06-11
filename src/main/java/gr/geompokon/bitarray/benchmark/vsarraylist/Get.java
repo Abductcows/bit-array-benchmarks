@@ -34,7 +34,7 @@ package gr.geompokon.bitarray.benchmark.vsarraylist;
 import gr.geompokon.bitarray.BitArray;
 import gr.geompokon.bitarray.benchmark.TestMethods;
 import gr.geompokon.bitarray.benchmark.state.ListState;
-import gr.geompokon.bitarray.benchmark.state.TestStates;
+import gr.geompokon.bitarray.benchmark.state.TestStates.GetTestSizeState;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
@@ -64,10 +64,10 @@ public class Get {
     public static class BitArrayState extends ListState<Boolean> {
         @Override
         public void setUp() {
-            obj = new BitArray(TestStates.GetTestSizeState.GET_TEST_SIZE);
+            int elementsToAdd = GetTestSizeState.GET_TEST_SIZE;
+            obj = new BitArray(elementsToAdd);
             // add the elements to get in the benchmark
-            TestMethods.populateList(obj,
-                    TestStates.GetTestSizeState.GET_TEST_SIZE,
+            TestMethods.populateList(obj, elementsToAdd,
                     ThreadLocalRandom.current()::nextBoolean);
         }
     }
@@ -75,10 +75,10 @@ public class Get {
     public static class ArrayListState extends ListState<Boolean> {
         @Override
         public void setUp() {
-            obj = new ArrayList<>(TestStates.GetTestSizeState.GET_TEST_SIZE);
+            int elementsToAdd = GetTestSizeState.GET_TEST_SIZE;
+            obj = new ArrayList<>(elementsToAdd);
             // add the elements to get in the benchmark
-            TestMethods.populateList(obj,
-                    TestStates.GetTestSizeState.GET_TEST_SIZE,
+            TestMethods.populateList(obj, elementsToAdd,
                     ThreadLocalRandom.current()::nextBoolean);
         }
     }
@@ -86,18 +86,18 @@ public class Get {
     // BENCHMARKS
 
     @Benchmark
-    public BitArrayState BitArrayGet(BitArrayState bitArrayState,
+    public BitArrayState BitArrayGet(BitArrayState bitArrayState, GetTestSizeState testSizeState,
                                      Blackhole blackhole) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.getRandomIndex(bitArrayState.obj, rand, blackhole);
+        TestMethods.getRandomIndex(bitArrayState.obj, rand, GetTestSizeState.GET_TEST_SIZE, blackhole);
         return bitArrayState;
     }
 
     @Benchmark
-    public ArrayListState ArrayListGet(ArrayListState arrayListState,
+    public ArrayListState ArrayListGet(ArrayListState arrayListState, GetTestSizeState testSizeState,
                                        Blackhole blackhole) {
         Random rand = ThreadLocalRandom.current();
-        TestMethods.getRandomIndex(arrayListState.obj, rand, blackhole);
+        TestMethods.getRandomIndex(arrayListState.obj, rand, GetTestSizeState.GET_TEST_SIZE, blackhole);
         return arrayListState;
     }
 
