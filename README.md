@@ -1,7 +1,7 @@
 # BitArray benchmarks
 Benchmark results for the latest version of the [BitArray](https://github.com/Abductcows/java-bit-array) class. Comparisons so far only include the ArrayList<Boolean> class.
 
-BitArray version: 1.0.1
+BitArray version: [1.0.1](https://github.com/Abductcows/java-bit-array/releases/tag/v1.0.1)
 
 (Message included with JMH results)  
 REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
